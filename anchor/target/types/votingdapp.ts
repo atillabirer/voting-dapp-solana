@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/votingdapp.json`.
  */
 export type Votingdapp = {
-  "address": "AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ",
+  "address": "FPzzmxm38cjWpiCQzHwF1Gb6stPPxGXGqiA6RZ8WAGNn",
   "metadata": {
     "name": "votingdapp",
     "version": "0.1.0",
@@ -14,150 +14,245 @@ export type Votingdapp = {
   },
   "instructions": [
     {
-      "name": "close",
+      "name": "initializeElection",
+      "docs": [
+        "Initializes the election with a name, description, start time, and candidates."
+      ],
       "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
+        59,
+        166,
+        191,
+        126,
+        195,
+        0,
+        153,
+        168
       ],
       "accounts": [
         {
-          "name": "payer",
+          "name": "admin",
+          "docs": [
+            "The signer who will become the admin of the election."
+          ],
           "writable": true,
           "signer": true
         },
         {
-          "name": "votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
-        {
-          "name": "votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "votingdapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
+          "name": "election",
           "writable": true,
-          "signer": true
-        },
-        {
-          "name": "votingdapp",
-          "writable": true,
-          "signer": true
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "startTime",
+          "type": "u64"
+        },
+        {
+          "name": "endTime",
+          "type": "u64"
+        },
+        {
+          "name": "candidateNames",
+          "type": {
+            "vec": "string"
+          }
+        }
+      ]
     },
     {
-      "name": "set",
+      "name": "vote",
+      "docs": [
+        "Casts a vote for a candidate by ID."
+      ],
       "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
+        227,
+        110,
+        155,
+        23,
+        136,
         126,
-        194
+        172,
+        25
       ],
       "accounts": [
         {
-          "name": "votingdapp",
-          "writable": true
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "election",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  108,
+                  101,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              }
+            ]
+          }
         }
       ],
       "args": [
         {
-          "name": "value",
-          "type": "u8"
+          "name": "candidateId",
+          "type": "u16"
         }
       ]
     }
   ],
   "accounts": [
     {
-      "name": "votingdapp",
+      "name": "election",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
-        188,
-        253,
-        124,
-        25
+        68,
+        191,
+        164,
+        85,
+        35,
+        105,
+        152,
+        202
       ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "electionAlreadyInitialized",
+      "msg": "Election has already been initialized."
+    },
+    {
+      "code": 6001,
+      "name": "votingNotStarted",
+      "msg": "Voting has not started yet."
+    },
+    {
+      "code": 6002,
+      "name": "votingEnded",
+      "msg": "Voting has ended."
+    },
+    {
+      "code": 6003,
+      "name": "candidateNotFound",
+      "msg": "Candidate not found."
+    },
+    {
+      "code": 6004,
+      "name": "unauthorizedAdmin",
+      "msg": "Unauthorized admin action."
+    },
+    {
+      "code": 6005,
+      "name": "alreadyVoted",
+      "msg": "You have already voted."
     }
   ],
   "types": [
     {
-      "name": "votingdapp",
+      "name": "candidate",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "count",
-            "type": "u8"
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "voters",
+            "type": {
+              "vec": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "election",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "initialized",
+            "type": "bool"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "type": "u64"
+          },
+          {
+            "name": "endTime",
+            "type": "u64"
+          },
+          {
+            "name": "candidates",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "candidate"
+                }
+              }
+            }
+          },
+          {
+            "name": "voters",
+            "type": {
+              "vec": "pubkey"
+            }
           }
         ]
       }

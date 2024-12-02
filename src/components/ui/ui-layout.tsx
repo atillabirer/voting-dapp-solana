@@ -1,14 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import {usePathname} from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import * as React from 'react'
-import {ReactNode, Suspense, useEffect, useRef} from 'react'
-import toast, {Toaster} from 'react-hot-toast'
+import { ReactNode, Suspense, useEffect, useRef } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 
-import {AccountChecker} from '../account/account-ui'
-import {ClusterChecker, ClusterUiSelect, ExplorerLink} from '../cluster/cluster-ui'
-import {WalletButton} from '../solana/solana-provider'
+import { AccountChecker } from '../account/account-ui'
+import { ClusterChecker, ClusterUiSelect, ExplorerLink } from '../cluster/cluster-ui'
+import { WalletButton } from '../solana/solana-provider'
 
 export function UiLayout({ children, links }: { children: ReactNode; links: { label: string; path: string }[] }) {
   const pathname = usePathname()
@@ -131,7 +131,7 @@ export function AppHero({
   return (
     <div className="hero py-[64px]">
       <div className="hero-content text-center">
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
           {typeof title === 'string' ? <h1 className="text-5xl font-bold">{title}</h1> : title}
           {typeof subtitle === 'string' ? <p className="py-6">{subtitle}</p> : subtitle}
           {children}
