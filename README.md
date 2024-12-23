@@ -1,5 +1,7 @@
 # voting-dapp
 
+A dapp + solana program for on chain voting.
+
 ## Getting Started
 
 ### Prerequisites
